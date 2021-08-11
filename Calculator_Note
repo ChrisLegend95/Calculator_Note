@@ -1,0 +1,122 @@
+from ast import ExtSlice, Index
+from tkinter import *
+from tkinter import ttk
+from time import strftime, time
+import keyword
+class Test:
+    global tk
+    global l2
+    index = 0
+    def __init__(self, tk):
+        self.l1 = ttk.Label(tk, text="History")
+        self.l1.place(x=100, y=5)
+        self.listbox = Listbox(tk)
+        scrollbar = Scrollbar(tk)
+        scrollbar.place(x=202, y=25, height=350)
+        self.listbox.config(yscrollcommand=scrollbar.set)
+        self.listbox.place(x=25, y=25, height=350, width=180)
+        self.e1 = ttk.Entry(tk)
+        self.e1.config()
+        self.e1.place(x=300, y=120, height=25, width=280)
+        self.b1 = ttk.Button(tk, text="Add to List", command=self.addItem).place(x=215, y=120)
+        self.bS = ttk.Button(tk, text="Sum", command=lambda:self.equals()).place(x=300, y=240)
+        self.bS = ttk.Button(tk, text="Help", command=help).place(x=510, y=450)
+        self.bDe = ttk.Button(tk, text="C",command=self.delete).place(x=460, y=240)
+        self.b2 = ttk.Button(tk, text="Delete", command=self.removeItem).place(x=120, y=375)
+        self.b3 = ttk.Button(tk, text="Delete all", command=self.marked).place(x=25, y=375)
+
+        #calc
+        self.n1 = ttk.Button(tk, text="1", command=lambda:self.sum("1")).place(x=300, y=150)
+        self.n2 = ttk.Button(tk, text="2", command=lambda:self.sum("2")).place(x=380, y=150)
+        self.n3 = ttk.Button(tk, text="3", command=lambda:self.sum("3")).place(x=460, y=150)
+        self.n4 = ttk.Button(tk, text="4", command=lambda:self.sum("4")).place(x=300, y=180)
+        self.n5 = ttk.Button(tk, text="5", command=lambda:self.sum("5")).place(x=380, y=180)
+        self.n6 = ttk.Button(tk, text="6", command=lambda:self.sum("6")).place(x=460, y=180)
+        self.n7 = ttk.Button(tk, text="7", command=lambda:self.sum("7")).place(x=300, y=210)
+        self.n8 = ttk.Button(tk, text="8", command=lambda:self.sum("8")).place(x=380, y=210)
+        self.n9 = ttk.Button(tk, text="9", command=lambda:self.sum("9")).place(x=460, y=210)
+        self.n0 = ttk.Button(tk, text="0", command=lambda:self.sum("0")).place(x=380, y=240)
+
+        # + and - and * and /
+        self.nP = ttk.Button(tk, text="+", command=lambda:self.sum("+")).place(x=540, y=150, width=40)
+        self.nM = ttk.Button(tk, text="-", command=lambda:self.sum("-")).place(x=540, y=180, width=40)
+        self.nG = ttk.Button(tk, text="x", command=lambda:self.sum("x")).place(x=540, y=210, width=40)
+        self.nD = ttk.Button(tk, text="/", command=lambda:self.sum("/")).place(x=540, y=240, width=40)
+
+    def getandreplace(self):
+ 
+        """replace x with * and ÷ with /"""
+        self.expression = self.e1.get()
+        self.newtext=self.expression.replace('/','/')
+        self.newtext=self.newtext.replace('x','*')
+
+
+    def addItem(self):
+        self.listbox.insert(Test.index, self.e1.get())
+        Test.index = Test.index + 1
+        self.e1.delete(0,END)
+    
+    def delete(self):
+        self.e1.delete(0,END)
+
+    def removeItem(self):
+        select = self.listbox.curselection()
+        self.listbox.delete(select)
+
+    def marked(self):
+        self.listbox.delete(0,END)
+
+    def sum(self, argi):
+        self.e1.insert(END,argi)
+
+    def equals(self):
+        self.getandreplace()
+        
+    def getandreplace(self):
+ 
+        """replace x with * and ÷ with /"""
+        self.expression = self.e1.get()
+        self.newtext=self.expression.replace('/','/')
+        self.newtext=self.newtext.replace('x','*')
+
+    def equals(self):
+        """when the equal button is pressed"""
+        inf = float("inf")
+        self.getandreplace()
+        try:
+            # evaluate the expression using the eval function
+            self.value= eval(self.newtext)
+        except SyntaxError or NameError:
+            self.e1.delete(0,END)
+            self.e1.insert(0,'Invalid Input!')
+        else:
+            self.e1.delete(END,END)
+            self.e1.insert(END,"=")
+            self.e1.insert(END,self.value)
+
+def time():
+    string = strftime('%H:%M:%S %p')
+    l2.after(1000, time)
+    l2.config(text=string)
+def help():
+        root = Tk()
+        root.geometry("300x100")
+        root.resizable(False, False)
+        root.title("Help")
+        root.iconbitmap("C:\\Users\\fachrilars\\Desktop\\technology.ico")
+        tx = ttk.Label(root, text="This is a calculator \n This will help you to make some easy math \n also you can storage your equections")
+        tx.pack(anchor="center", expand=True)
+        bt = ttk.Button(root, text="Close")
+        bt.config(command=root.destroy)
+        bt.pack(side=BOTTOM)
+
+tk = Tk()
+tk.iconbitmap("C:\\Users\\fachrilars\\Desktop\\technology.ico")
+tk.title("Räkna lägg in")
+tk.geometry("600x500")
+tk.resizable(False, False)
+tt = Test(tk)
+l2 = ttk.Label(tk, background="white", relief="groove")
+l2.place(x=532, y=0)
+time()
+tk.mainloop()
